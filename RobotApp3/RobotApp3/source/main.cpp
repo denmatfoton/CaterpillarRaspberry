@@ -12,13 +12,13 @@ using namespace std;
 MotionHandler* motionHandler;
 
 
-int main(int argc, char** argv)
+int main(/*int argc, char** argv*/)
 {
     wiringPiSetup();
 
     motionHandler = new MotionHandler();
 
-    //Server* server = Server::getInstance();
+    Server* server = Server::getInstance();
 
     //RotateDirection direction = ROTATE_FORWARD;
 
@@ -32,6 +32,10 @@ int main(int argc, char** argv)
         {
             radius = INFINITE_RADIUS;
         }
+	if (radius == -1)
+	{
+	    break;
+	}
 
         printf("duration: ");
         scanf("%d", &duration);
@@ -39,4 +43,7 @@ int main(int argc, char** argv)
         motionHandler->addCurve({ duration , radius });
         this_thread::sleep_for(chrono::milliseconds(2));
     }
+    server->Destroy();
+
+    return 0;
 }

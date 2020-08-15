@@ -13,11 +13,12 @@ class Server
 {
 public:
     static Server* getInstance();
+    static void Destroy();
 private:
     Server();
     ~Server();
     Server(Server const&) {}
-    Server& operator=(Server const&) {}
+    //Server& operator=(Server const&) {}
     void processReceivedData(char* buffer, int length);
     static Server* instance;
 

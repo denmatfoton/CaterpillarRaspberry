@@ -49,11 +49,11 @@ void* serverTask(void* param)
     struct sockaddr_in cli_addr;
     socklen_t clilen = sizeof(cli_addr);
     static char buffer[INPUT_BUFFER_SIZE];
-    int n;
+	static_cast<void>(param);
 
     listen(Server::instance->server_socket, 1);
 
-    do
+    while (true)
     {
         printf("Waiting for client...\n");
 
@@ -71,8 +71,7 @@ void* serverTask(void* param)
         while (true)
         {
             bzero(buffer, INPUT_BUFFER_SIZE);
-            //recv()
-            n = read(Server::instance->client_socket, buffer, INPUT_BUFFER_SIZE);
+            int n = read(Server::instance->client_socket, buffer, INPUT_BUFFER_SIZE);
             if (n < 0)
             {
                 printf("ERROR reading from socket\n");
@@ -83,7 +82,6 @@ void* serverTask(void* param)
             Server::instance->processReceivedData(buffer, n);
         }
     }
-    while (true);
 
     return nullptr;
 }
@@ -95,7 +93,6 @@ Server* Server::getInstance()
     {
         instance = new Server();
     }
-
     return instance;
 }
 
@@ -107,40 +104,46 @@ Server::~Server()
 }
 
 
+void Server::Destroy()
+{
+    if (instance != nullptr)
+    {
+	delete instance;
+	instance = nullptr;
+    }
+}
+
+
 void Server::processReceivedData(char* buffer, int length)
 {
-    if (length <= 0)
-    {
-        return;
-    }
+    if (length <= 0) return;
 
     printf("Processing data\n");
 
     switch (buffer[0])
     {
     case CMD_MOTOR_SETTINGS:
-    {
-        MotorController* motor = motionHandler->getMotor(buffer[1]);
+		{
+			MotorController* motor = motionHandler->getMotor(buffer[1]);
 
-        if (motor == nullptr)
-        {
-            return;
-        }
+			if (motor == nullptr) return;
 
-        RotateDirection direction = static_cast<RotateDirection>(buffer[2]);
-        int power = *(reinterpret_cast<int*>(buffer + 3));
+			RotateDirection direction = static_cast<RotateDirection>(buffer[2]);
+			int power = *(reinterpret_cast<int*>(buffer + 3));
 
-        motor->run(direction, power);
-    }
+			motor->run(direction, power);
+		}
+		break;
     case CMD_MOTION:
-    {
-        int radius = *(reinterpret_cast<int*>(buffer + 1));
-        int power = *(reinterpret_cast<int*>(buffer + 5));
+		{
+			int radius = *(reinterpret_cast<int*>(buffer + 1));
+			int power = *(reinterpret_cast<int*>(buffer + 5));
 
-        motionHandler->setWorkingPower(power);
-        motionHandler->addCurve({40, radius});
-        //motionHandler->setMovement(radius, power);
-    }
+			motionHandler->setWorkingPower(power);
+			motionHandler->addCurve({40, radius});
+			//motionHandler->setMovement(radius, power);
+		}
+		break;
     default:
         break;
     }

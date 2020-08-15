@@ -10,9 +10,9 @@ void motionTask();
 
 MotionHandler::MotionHandler() : left_motor(LEFT_MOTOR_1_PIN, LEFT_MOTOR_2_PIN, LEFT_MOTOR_PWM_PIN),
                                  right_motor(RIGHT_MOTOR_1_PIN, RIGHT_MOTOR_2_PIN, RIGHT_MOTOR_PWM_PIN),
-                                 motion_thread(motionTask),
                                  current_movement_duration(-1),
-                                 current_power(400)
+                                 current_power(400),
+                                 motion_thread(motionTask)
 {
     sem_init(&queue_semaphore, 0, 0);
 }
@@ -103,7 +103,7 @@ void MotionHandler::setMovement(int radius, int power)
 
 
     // calibrate correction
-    right_power = static_cast<int>((1 - STRAIGHT_CALIBRATE_COEFFICIENT * right_power * right_power / 1024.0 / 1024.0) * right_power + 0.5f);
+    right_power = static_cast<int>((1 - STRAIGHT_CALIBRATE_COEFFICIENT * static_cast<double>(right_power) * static_cast<double>(right_power) / 1024.0 / 1024.0) * static_cast<double>(right_power) + 0.5f);
 
     right_motor.run(right_direction, right_power);
     left_motor.run(left_direction, left_power);

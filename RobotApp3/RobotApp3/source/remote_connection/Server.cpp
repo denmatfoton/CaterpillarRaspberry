@@ -121,9 +121,10 @@ void Server::processReceivedData(char* buffer, int length) {
         int radius = *(reinterpret_cast<int*>(buffer + 1));
         int power = *(reinterpret_cast<int*>(buffer + 5));
 
-        motionHandler->setWorkingPower(power);
-        motionHandler->addCurve({ 40, radius });
-        //motionHandler->setMovement(radius, power);
+        //motionHandler->setWorkingPower(power);
+        //motionHandler->addCurve({ 40, radius });
+        
+        motionHandler->move(radius, power, 40);
     }
     break;
     default:

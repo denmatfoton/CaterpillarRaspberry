@@ -4,7 +4,9 @@
 #include <thread>
 #include <mutex>
 #include <semaphore.h>
+
 #include "MotorController.h"
+#include "timer.h"
 
 
 // 1 unit - 1 mm
@@ -25,18 +27,21 @@ struct Curve {
 class MotionHandler {
 public:
     MotionHandler();
-    void addCurve(Curve c);
-    Curve getNextCurve();
-    MotorController* getMotor(int idx);
 
     void setWorkingPower(int value) { current_power = value; }
+    void addCurve(Curve c);
+    void move(int radius, int power, uint32_t time_out_ms);
+    MotorController* getMotor(int idx);
+
     void process();
 private:
+    Curve getNextCurve();
     void setMovement(int radius, int power);
 
     MotorController left_motor;
     MotorController right_motor;
     std::queue<Curve> route;
+    Curve *last_curve = nullptr;
 
     std::chrono::time_point<std::chrono::steady_clock, std::chrono::nanoseconds> start_movement_time;
     int current_movement_duration;
@@ -45,6 +50,7 @@ private:
     sem_t queue_semaphore;
     std::mutex queue_mutex;
     std::thread motion_thread;
+    Timer motion_timer;
 };
 
 

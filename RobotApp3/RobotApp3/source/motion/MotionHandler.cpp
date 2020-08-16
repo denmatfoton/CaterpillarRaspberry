@@ -9,10 +9,14 @@ using namespace std;
 void motionTask();
 
 MotionHandler::MotionHandler() : left_motor(LEFT_MOTOR_1_PIN, LEFT_MOTOR_2_PIN, LEFT_MOTOR_PWM_PIN),
-right_motor(RIGHT_MOTOR_1_PIN, RIGHT_MOTOR_2_PIN, RIGHT_MOTOR_PWM_PIN),
-current_movement_duration(-1),
-current_power(400),
-motion_thread(motionTask) {
+                                 right_motor(RIGHT_MOTOR_1_PIN, RIGHT_MOTOR_2_PIN, RIGHT_MOTOR_PWM_PIN),
+                                 current_movement_duration(-1),
+                                 current_power(400),
+                                 motion_thread(motionTask),
+                                 motion_timer([&] {
+                                     right_motor.stop();
+                                     left_motor.stop();
+                                 }) {
     sem_init(&queue_semaphore, 0, 0);
 }
 
@@ -24,13 +28,18 @@ void MotionHandler::addCurve(Curve c) {
     queue_mutex.unlock();
 }
 
+
+void MotionHandler::move(int radius, int power, uint32_t time_out_ms) {
+    setMovement(radius, power);
+    motion_timer.Start(time_out_ms);
+}
+
+
 Curve MotionHandler::getNextCurve() {
     sem_wait(&queue_semaphore);
-
-    queue_mutex.lock();
+    lock_guard<mutex> lk(queue_mutex);
     Curve first = route.front();
     route.pop();
-    queue_mutex.unlock();
     return first;
 }
 
@@ -51,7 +60,6 @@ void MotionHandler::process() {
         right_motor.stop();
         left_motor.stop();
     }
-
     Curve curr_curve = getNextCurve();
     setMovement(curr_curve.radius, current_power);
     this_thread::sleep_for(chrono::milliseconds(curr_curve.duration));

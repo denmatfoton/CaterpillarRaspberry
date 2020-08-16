@@ -82,7 +82,10 @@ C:\SysGCC\raspberry\bin\make</ReBuildCommandLine>
     <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
-    <NMakeIncludeSearchPath>D:\Projects\projects\Raspberry\RobotApp3\RobotApp3\source\remote_connection;C:\SysGCC\raspberry\arm-linux-gnueabihf\include\arm-linux-gnueabihf;C:\SysGCC\raspberry\arm-linux-gnueabihf\sysroot\usr\include;D:\Projects\projects\Raspberry\RobotApp3\RobotApp3\source\motion;D:\Projects\projects\Raspberry\RobotApp3\RobotApp3\source</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>C:\SysGCC\raspberry\arm-linux-gnueabihf\include\arm-linux-gnueabihf;C:\SysGCC\raspberry\arm-linux-gnueabihf\sysroot\usr\include;$(ProjectDir)source;$(ProjectDir)source\remote_connection;$(ProjectDir)source\utils;$(ProjectDir)source\motion</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <NMakeIncludeSearchPath>C:\SysGCC\raspberry\arm-linux-gnueabihf\include\arm-linux-gnueabihf;C:\SysGCC\raspberry\arm-linux-gnueabihf\sysroot\usr\include;$(ProjectDir)source;$(ProjectDir)source\remote_connection;$(ProjectDir)source\utils;$(ProjectDir)source\motion</NMakeIncludeSearchPath>
   </PropertyGroup>
   <ItemGroup>
     <None Include="common.mk" />
@@ -93,12 +96,14 @@ C:\SysGCC\raspberry\bin\make</ReBuildCommandLine>
     <ClCompile Include="source\motion\MotionHandler.cpp" />
     <ClCompile Include="source\motion\MotorController.cpp" />
     <ClCompile Include="source\remote_connection\Server.cpp" />
+    <ClCompile Include="source\utils\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\configuration.h" />
     <ClInclude Include="source\motion\MotionHandler.h" />
     <ClInclude Include="source\motion\MotorController.h" />
     <ClInclude Include="source\remote_connection\Server.h" />
+    <ClInclude Include="source\utils\timer.h" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <PostBuildEvent>

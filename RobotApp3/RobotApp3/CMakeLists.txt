@@ -27,6 +27,7 @@ INCLUDE_DIRECTORIES(
     source
     source/motion
     source/remote_connection
+    source/utils
 )
 
 set(MAIN_SOURCES
@@ -34,6 +35,7 @@ set(MAIN_SOURCES
     source/motion/MotionHandler.cpp
     source/motion/MotorController.cpp
     source/remote_connection/Server.cpp
+    source/utils/timer.cpp
 )
 
 add_executable(${TARGET_NAME} ${MAIN_SOURCES})

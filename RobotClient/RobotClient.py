@@ -1,6 +1,5 @@
 import socket
-import os
-from Tkinter import *
+from tkinter import *
 
 CMD_MOTOR_SETTINGS = 0x01
 LEFT_MOTOR_IDX = 1
@@ -21,7 +20,7 @@ def to_bytes(num, length, order):
     return res
 
 
-HOST = '192.168.0.18'
+HOST = '192.168.9.161'
 PORT = 4385
 robot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 robot_socket.connect((HOST, PORT))

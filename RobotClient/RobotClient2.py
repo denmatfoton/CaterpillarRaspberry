@@ -1,5 +1,5 @@
 import socket
-from Tkinter import *
+from tkinter import *
 
 CMD_MOTOR_SETTINGS = 0x01
 CMD_SET_MOTION     = 0x02
@@ -15,7 +15,7 @@ def to_bytes(num, length, order):
     return res
 
 
-HOST = '192.168.0.18'
+HOST = '192.168.9.161'
 PORT = 4385
 robot_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 robot_socket.connect((HOST, PORT))
@@ -58,7 +58,7 @@ def key_pressed_handle(event):
             radius = RIGHT_MARGIN * 200 / (x - RIGHT_MARGIN) - x + DISPLAY_WIDTH - 222
         else:
             radius = STRAIGHT_RADIUS
-
+        radius = int(radius)
         label_text.set("Radius: " + str(radius))
         send_motion_cmd(radius, power)
 

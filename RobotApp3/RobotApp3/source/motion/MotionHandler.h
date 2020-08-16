@@ -16,15 +16,13 @@
 #define LEFT_MOTOR_IDX          1
 #define RIGHT_MOTOR_IDX         2
 
-struct Curve
-{
+struct Curve {
     int duration;
     int radius;
 };
 
 
-class MotionHandler
-{
+class MotionHandler {
 public:
     MotionHandler();
     void addCurve(Curve c);

@@ -39,5 +39,5 @@ set(MAIN_SOURCES
 )
 
 add_executable(${TARGET_NAME} ${MAIN_SOURCES})
-target_link_libraries(${TARGET_NAME} Threads::Threads wiringPi)
+target_link_libraries(${TARGET_NAME} Threads::Threads wiringPi rt)
 

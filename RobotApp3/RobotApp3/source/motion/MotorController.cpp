@@ -14,7 +14,7 @@ MotorController::MotorController(const uint8_t in1, const uint8_t in2,
 
 
 void MotorController::run(RotateDirection const direction, int power) const {
-    printf("Motor run %d %d\n", static_cast<int>(direction), power);
+    //printf("Motor run %d %d\n", static_cast<int>(direction), power);
     if (direction == DIRECTION_FORWARD) {
         digitalWrite(pin1, HIGH);
         digitalWrite(pin2, LOW);

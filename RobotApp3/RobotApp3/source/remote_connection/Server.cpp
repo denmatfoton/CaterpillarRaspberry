@@ -101,7 +101,7 @@ void Server::Destroy() {
 void Server::processReceivedData(char* buffer, int length) {
     if (length <= 0) return;
 
-    printf("Processing data\n");
+    //printf("Processing data\n");
 
     switch (buffer[0]) {
     case CMD_MOTOR_SETTINGS:

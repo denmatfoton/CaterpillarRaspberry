@@ -1,4 +1,5 @@
 import socket
+import math
 from tkinter import *
 
 CMD_MOTOR_SETTINGS = 0x01
@@ -32,7 +33,9 @@ def send_motion_cmd(radius, power):
 
 DEFAULT_POWER = 800
 STRAIGHT_RADIUS = 0x7fffffff
-STRAIGHT_MARGIN = 100
+STRAIGHT_MARGIN = 80
+ZERO_LIMIT = 600
+EXP_DIV = ZERO_LIMIT / 10
 DISPLAY_WIDTH = 1920
 LEFT_MARGIN = (DISPLAY_WIDTH - STRAIGHT_MARGIN) / 2
 RIGHT_MARGIN = (DISPLAY_WIDTH + STRAIGHT_MARGIN) / 2
@@ -53,9 +56,11 @@ def key_pressed_handle(event):
         x = master.winfo_pointerxy()[0]
 
         if x < LEFT_MARGIN:
-            radius = LEFT_MARGIN * 200 / (x - LEFT_MARGIN) - x + 199
+            #radius = - math.exp((x - LEFT_MARGIN + ZERO_LIMIT) / EXP_DIV) - 1
+            radius = math.exp((x - LEFT_MARGIN + ZERO_LIMIT) / EXP_DIV) + max(0, x - LEFT_MARGIN + ZERO_LIMIT) + 1
         elif x > RIGHT_MARGIN:
-            radius = RIGHT_MARGIN * 200 / (x - RIGHT_MARGIN) - x + DISPLAY_WIDTH - 222
+            #radius = math.exp((RIGHT_MARGIN - x + ZERO_LIMIT) / EXP_DIV) + 1
+            radius = -(math.exp((RIGHT_MARGIN - x + ZERO_LIMIT) / EXP_DIV) + max(0, RIGHT_MARGIN - x + ZERO_LIMIT) + 1)
         else:
             radius = STRAIGHT_RADIUS
         radius = int(radius)
@@ -67,10 +72,7 @@ master = Tk()
 label_text = StringVar()
 Label(master, textvariable=label_text).pack()
 label_text.set("Radius: N/A")
-#frame = Frame(master, width=100, height=100)
-#frame.pack()
 master.bind_all('<Key>', key_pressed_handle)
-
 
 mainloop()
 
